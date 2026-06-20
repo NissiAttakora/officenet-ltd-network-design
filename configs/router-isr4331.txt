@@ -1,1 +1,106 @@
+Current configuration : 1601 bytes
+!
+version 15.4
+no service timestamps log datetime msec
+no service timestamps debug datetime msec
+service password-encryption
+!
+hostname OFFICE-RTR
+!
+!
+!
+enable secret 5 $1$mERr$B8EpeS2vNTYl1l4UbbBge0
+!
+!
+!
+!
+!
+!
+ip cef
+no ipv6 cef
+!
+!
+!
+username admin secret 5 $1$mERr$J8wcf1L0LjxASIJsujlXW0
+!
+!
+!
+!
+!
+!
+!
+!
+ip ssh version 2
+ip ssh time-out 60
+no ip domain-lookup
+ip domain-name officenet.local
+!
+!
+spanning-tree mode pvst
+!
+!
+!
+!
+!
+!
+interface GigabitEthernet0/0/0
+ description WAN-TO-ISP
+ ip address 203.0.113.10 255.255.255.252
+ ip nat outside
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/0/1
+ description LINK-TO-ASA-FIREWALL
+ ip address 10.0.0.1 255.255.255.252
+ ip nat inside
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/0/2
+ no ip address
+ duplex auto
+ speed auto
+ shutdown
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+ip classless
+ip route 0.0.0.0 0.0.0.0 GigabitEthernet0/0/0 
+ip route 192.168.0.0 255.255.0.0 10.0.0.2 
+!
+ip flow-export version 9
+!
+!
+ip access-list standard NAT-TRAFFIC
+ permit 192.168.0.0 0.0.255.255
+!
+banner motd ^C ----------------------------------------------
+---------------------------------------------------------------------------
+OFFICENET LTD - AUTHORIDES ACCESS ONLY
+----------------------------------------------------------------------------
+----------------------------------------------------------------------------^C
+!
+!
+!
+!
+line con 0
+ exec-timeout 50 0
+ password 7 080243401A16091232393836737265
+ logging synchronous
+ login
+!
+line aux 0
+!
+line vty 0 4
+ exec-timeout 50 0
+ logging synchronous
+ login local
+ transport input ssh
+!
+!
+!
+end
 
